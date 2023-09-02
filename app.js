@@ -1,5 +1,10 @@
 let taskList = document.getElementById("task-list");
 let btnAdd = document.getElementById("btn-add");
+let inputNewTask = document.getElementById("desc-task"); /* input nesnesini aldım */
+
+let editedId;//O sırada güncellenecek task'in id'si
+let isEditMode = false;
+
 /* virgülden sonra fonksiyon yazabiliriz veya  */
 /* callback kullanımını araştır (addNewTask) */
 btnAdd.addEventListener("click", addNewTask); /* CLİCK OLAYINI DİNLİYOR TIKLANINCA FONKSİYONU ÇALIŞTIRIYOR */
@@ -28,7 +33,7 @@ function displayTask() {
                 </button>
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="#" onclick="removeTask(${task.id})">Sil</a></li>
-                    <li><a class="dropdown-item" href="#">Düzenle</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="editTask(${task.id},'${task.description}')">Düzenle</a></li>
                 </ul>
             </div>
         </li>
@@ -38,19 +43,37 @@ function displayTask() {
 }
 
 
-function addNewTask() {
-  let inputNewTask = document.getElementById("desc-task"); /* input nesnesini aldım */
-  /* son elemanı bul */
-  if (isFull(inputNewTask.value)) {
-    let newId = taskArray[taskArray.length - 1].id + 1;
-    /* arraya ekliyoruz */
-    taskArray.push({ id: newId, description: inputNewTask.value });
-    displayTask();
+function addNewTask(e) {
+  e.preventDefault();
+  if (!isEditMode) {
+
+    //YENİ KAYIT
+    if (isFull(inputNewTask.value)) {
+      let newId = taskArray[taskArray.length - 1].id + 1;
+      /* arraya ekliyoruz */
+      taskArray.push({ id: newId, description: inputNewTask.value });
+    } else {
+      alert("lütfen görev açıklamasını boş bırakmayınız")
+    }
   } else {
-    alert("lütfen giriş yapınız");
+    //GÜNCELLEME
+    for (const task of taskArray) {
+      if (task.id == editedId) {
+        task.description = inputNewTask.value;
+        isEditMode = false;
+        editedId = null;
+        btnAdd.innerText = "Ekle";
+        btnAdd.classList.remove("bg-warning")
+      }
+    }
   }
+  displayTask();
   inputNewTask.value = ""; /* input boş olsun */
+  inputNewTask.focus(); /* imleç bu kısımda olsun */
+
 }
+
+
 function isFull(value) {
   if (value.trim() == "") {
     return false;
@@ -74,5 +97,13 @@ function removeTask(id) {
     displayTask();
   }
   // console.log("silinecek görev : ", taskArray[deletedIndex]);
+}
+function editTask(id, description) {
+  editedId=id;
+  isEditMode=true;
+  inputNewTask.value=description;
+  inputNewTask.focus();
+  btnAdd.innerText="Güncelle"
+  btnAdd.classList.add("bg-warning")
 }
 displayTasks();
