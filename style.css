@@ -1,0 +1,12 @@
+.completed{
+    text-decoration: line-through;
+}
+
+#filters span{
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#filters span.active{
+    color: darkcyan;
+}
