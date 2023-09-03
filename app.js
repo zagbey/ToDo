@@ -45,7 +45,7 @@ function getTasks() {
   taskListContainer.insertAdjacentHTML("beforeend", div);
 }
 
-function displayTask() {
+function displayTasks() {
 
   if (taskArray.length >= 1) {
     taskList = document.getElementById("task-list");
