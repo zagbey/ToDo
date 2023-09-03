@@ -123,6 +123,11 @@ function addNewTask(e) {
   inputNewTask.focus();
 
 }
+/* ---------------------------------- */
+function saveLocalStorage() {
+  // JSON: JavaScript Object Notation
+  localStorage.setItem("taskList", JSON.stringify(taskArray));
+}
 
 
 function isFull(value) {
