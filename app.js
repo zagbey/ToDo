@@ -114,6 +114,11 @@ function addNewTask(e) {
         editedId = null;
         btnAdd.innerText = "Ekle";
         btnAdd.classList.remove("bg-warning");
+
+        //diğer görevler tekrar görünür hale getirilecek 
+        let containerTaskList=document.getElementById("task-list").parentElement
+        containerTaskList.classList.add("remove")
+        console.log(containerTaskList)
       }
     }
   }
@@ -162,6 +167,10 @@ function editTask(id, description) {
   inputNewTask.focus();
   btnAdd.innerText = "Güncelle"
   btnAdd.classList.add("bg-warning")
+
+  let containerTaskList=document.getElementById("task-list").parentElement
+  console.log(containerTaskList);
+  containerTaskList.classList.add("hide")
 }
 function updateStatus(element) {
   // console.log(element.getAttribute("id"));

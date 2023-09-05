@@ -10,3 +10,12 @@
 #filters span.active{
     color: darkcyan;
 }
+
+
+.hide{
+    display: none;
+}
+.show{
+    display: inline-block;
+}
+ 
