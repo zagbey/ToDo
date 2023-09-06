@@ -1,18 +1,18 @@
+
 let taskList;
 let btnAdd = document.getElementById("btn-add");
-let inputNewTask = document.getElementById("desc-task"); /* input nesnesini aldım */
+let inputNewTask = document.getElementById("desc-task");
 let filters = document.querySelectorAll("#filters span");
 let btnClearAll = document.getElementById("btn-clear-all");
 
 let taskArray = [];
+
 let filterMode = "all";
 
 let editedId;//O sırada güncellenecek task'in id'si
 let isEditMode = false;
 
-/* virgülden sonra fonksiyon yazabiliriz veya  */
-/* callback kullanımını araştır (addNewTask) */
-btnAdd.addEventListener("click", addNewTask); /* CLİCK OLAYINI DİNLİYOR TIKLANINCA FONKSİYONU ÇALIŞTIRIYOR */
+btnAdd.addEventListener("click", addNewTask);
 btnClearAll.addEventListener("click", function () {
   taskArray = [];
   saveLocalStorage();
@@ -43,13 +43,14 @@ function getTasks() {
             </div>
         `;
   taskListContainer.insertAdjacentHTML("beforeend", div);
+
+
 }
 
 function displayTasks() {
 
   if (taskArray.length >= 1) {
     taskList = document.getElementById("task-list");
-    console.log(taskList);
     taskList.innerHTML = "";
     for (const task of taskArray) {
       let isCompleted = task.status == "completed" ? true : false;
@@ -88,12 +89,10 @@ function displayTasks() {
   }
 }
 
-
 function addNewTask(e) {
   e.preventDefault();
   if (!isEditMode) {
-
-    //YENİ KAYIT
+    //Yeni kayıt
     let alertMessage = document.getElementById("alert-message");
     if (alertMessage) {
       alertMessage.remove();
@@ -114,11 +113,9 @@ function addNewTask(e) {
         editedId = null;
         btnAdd.innerText = "Ekle";
         btnAdd.classList.remove("bg-warning");
-
-        //diğer görevler tekrar görünür hale getirilecek 
-        let containerTaskList=document.getElementById("task-list").parentElement
-        containerTaskList.classList.add("remove")
-        console.log(containerTaskList)
+        //Diğer görevler tekrar görünür hale getirilecek
+        let containerTaskList = document.getElementById("task-list").parentElement;
+        containerTaskList.classList.remove("hide");
       }
     }
   }
@@ -128,12 +125,11 @@ function addNewTask(e) {
   inputNewTask.focus();
 
 }
-/* ---------------------------------- */
+
 function saveLocalStorage() {
   // JSON: JavaScript Object Notation
   localStorage.setItem("taskList", JSON.stringify(taskArray));
 }
-
 
 function isFull(value) {
   if (value.trim() == "") {
@@ -141,11 +137,8 @@ function isFull(value) {
   }
   return true;
 }
-/* Turnery ---> const isFull = (value) => (value.trim() === "") ? false : true;
- */
 
 function removeTask(id) {
-  /* önce gönderilen id^nin dizide yerini bulmalıyız */
   let deletedIndex;
   for (let i = 0; i < taskArray.length; i++) {
     if (taskArray[i].id == id) {
@@ -156,22 +149,22 @@ function removeTask(id) {
   if (answer) {
     taskArray.splice(deletedIndex, 1);
     saveLocalStorage();
-    displayTask();
+    displayTasks();
   }
-  // console.log("silinecek görev : ", taskArray[deletedIndex]);
 }
+
 function editTask(id, description) {
   editedId = id;
   isEditMode = true;
   inputNewTask.value = description;
   inputNewTask.focus();
-  btnAdd.innerText = "Güncelle"
-  btnAdd.classList.add("bg-warning")
-
-  let containerTaskList=document.getElementById("task-list").parentElement
-  console.log(containerTaskList);
-  containerTaskList.classList.add("hide")
+  btnAdd.innerText = "Güncelle";
+  btnAdd.classList.add("bg-warning");
+  //Buraya görevleri gizleyecek bir kod yazacağız.
+  let containerTaskList = document.getElementById("task-list").parentElement;
+  containerTaskList.classList.add("hide");
 }
+
 function updateStatus(element) {
   // console.log(element.getAttribute("id"));
   // console.log(element.id);
@@ -196,5 +189,6 @@ function updateStatus(element) {
   }
   saveLocalStorage();
 }
+
 getTasks();
 displayTasks();
