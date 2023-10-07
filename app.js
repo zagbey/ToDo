@@ -4,6 +4,7 @@ let btnAdd = document.getElementById("btn-add");
 let inputNewTask = document.getElementById("desc-task");
 let filters = document.querySelectorAll("#filters span");
 let btnClearAll = document.getElementById("btn-clear-all");
+let btnCancel = document.getElementById("btn-cancel")
 
 let taskArray = [];
 
@@ -11,7 +12,7 @@ let filterMode = "all";
 
 let editedId;//O sırada güncellenecek task'in id'si
 let isEditMode = false;
-
+let isEditing = false;
 btnAdd.addEventListener("click", addNewTask);
 btnClearAll.addEventListener("click", function () {
   taskArray = [];
@@ -51,7 +52,7 @@ function displayTasks() {
 
   if (taskArray.length >= 1) {
     taskList = document.getElementById("task-list");
-    taskList.innerHTML = "";
+    // taskList.innerHTML = "";
     for (const task of taskArray) {
       let isCompleted = task.status == "completed" ? true : false;
       if (filterMode == task.status || filterMode == "all") {
@@ -116,6 +117,7 @@ function addNewTask(e) {
         //Diğer görevler tekrar görünür hale getirilecek
         let containerTaskList = document.getElementById("task-list").parentElement;
         containerTaskList.classList.remove("hide");
+        toggleCancelBtn(false);
       }
     }
   }
@@ -126,18 +128,23 @@ function addNewTask(e) {
 
 }
 
+function editTask(id, description) {
+  editedId = id;
+  isEditMode = true;
+  inputNewTask.value = description;
+  inputNewTask.focus();
+  btnAdd.innerText = "Güncelle";
+  btnAdd.classList.add("bg-warning");
+  isEditing = true;
+  toggleCancelBtn(true);//vazgeç butonunu göster 
+  //Buraya görevleri gizleyecek bir kod yazacağız.
+  let containerTaskList = document.getElementById("task-list").parentElement;
+  containerTaskList.classList.add("hide");
+}
 function saveLocalStorage() {
   // JSON: JavaScript Object Notation
   localStorage.setItem("taskList", JSON.stringify(taskArray));
 }
-
-function isFull(value) {
-  if (value.trim() == "") {
-    return false;
-  }
-  return true;
-}
-
 function removeTask(id) {
   let deletedIndex;
   for (let i = 0; i < taskArray.length; i++) {
@@ -153,17 +160,37 @@ function removeTask(id) {
   }
 }
 
-function editTask(id, description) {
-  editedId = id;
-  isEditMode = true;
-  inputNewTask.value = description;
-  inputNewTask.focus();
-  btnAdd.innerText = "Güncelle";
-  btnAdd.classList.add("bg-warning");
-  //Buraya görevleri gizleyecek bir kod yazacağız.
-  let containerTaskList = document.getElementById("task-list").parentElement;
-  containerTaskList.classList.add("hide");
+function isFull(value) {
+  if (value.trim() == "") {
+    return false;
+  }
+  return true;
 }
+
+
+
+//VAZGEÇ BUTONU 
+function toggleCancelBtn(show) {
+  const btnCancel = document.getElementById("btn-cancel");
+  if (show) {
+    btnCancel.style.display = "inline-block";
+  } else {
+    btnCancel.style.display = "none";
+  }
+}
+//VAZGEÇ butonuna tıklandğında düzenleme işlemi iptal edilecek
+btnCancel.addEventListener("click", function () {
+  isEditMode = false;
+  editedId = null;
+  btnAdd.innerText = "Ekle";
+  btnAdd.classList.remove("bg-warning");
+  isEditing = false; // Düzenleme işlemi iptal edildi
+  toggleCancelBtn(false); // Vazgeç butonunu gizle
+  //Diğer görevler tekrar görünür hale getirilecek
+  let containerTaskList = document.getElementById("task-list").parentElement;
+  containerTaskList.classList.remove("hide");
+});
+
 
 function updateStatus(element) {
   // console.log(element.getAttribute("id"));
